@@ -1,0 +1,37 @@
+
+DEFINITION MODULE IR98;
+
+(*	ハンドラは 1 つの実行ファイルに 1 つだけ定義できる.	*)
+
+FROM SYSTEM IMPORT ADDRESS;
+FROM MSDOS IMPORT Registers;
+
+CONST
+	EXIST = 1640h;
+	ETYPE = 1ah;
+	VTYPE = 0ah;
+	BTYPE = 28h;
+
+VAR
+	NewExist, NewVsync, NewBG: ADDRESS;		(* リンクされた IVA *)
+	ExistIVA[ 0 : ETYPE * 4 ]: ADDRESS;		(* IVA へのポインタ *)
+	VsyncIVA[ 0 : VTYPE * 4 ]: ADDRESS;		(* IVA へのポインタ *)
+	BGIVA[ 0 : BTYPE * 4 ]: ADDRESS;		(* IVA へのポインタ *)
+
+TYPE
+	IPROC = PROCEDURE( CARDINAL ): CARDINAL;
+
+PROCEDURE LinkVsync( proc: PROC; soff: CARDINAL );
+PROCEDURE UnlinkVsync;
+PROCEDURE LinkBG( proc: PROC; soff: CARDINAL );
+PROCEDURE UnlinkBG;
+PROCEDURE LinkExist( id: CARDINAL; proc: IPROC; soff: CARDINAL );
+PROCEDURE UnlinkExist;
+PROCEDURE Icall( VAR r: Registers; i:CARDINAL ): CARDINAL;
+PROCEDURE Free( psp: CARDINAL );
+PROCEDURE GetINDOS(): ADDRESS;
+PROCEDURE GetMCB(): ADDRESS;
+
+END IR98.
+
+
